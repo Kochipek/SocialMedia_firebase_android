@@ -67,7 +67,6 @@ class FeedActivity : AppCompatActivity() {
                 }
             }
     }
-
     // inflate menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val menuInflater = menuInflater

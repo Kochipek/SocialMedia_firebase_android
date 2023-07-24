@@ -19,59 +19,52 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         auth = Firebase.auth
         setContentView(view)
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-        // check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if (currentUser != null) {
             val intent = Intent(this, FeedActivity::class.java)
             startActivity(intent)
+            finish()
+        }
+    }
+    fun onSignInClicked(view : View) {
+
+        val userEmail = binding.EmailText.text.toString()
+        val password = binding.PasswordText.text.toString()
+
+        if (userEmail.isNotEmpty() && password.isNotEmpty()) {
+            auth.signInWithEmailAndPassword(userEmail,password).addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+                    //Signed In
+                    Toast.makeText(applicationContext,"Welcome: ${auth.currentUser?.email.toString()}",Toast.LENGTH_SHORT).show()
+                    val intent = Intent(applicationContext, FeedActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }.addOnFailureListener { exception ->
+                Toast.makeText(applicationContext,exception.localizedMessage,Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    fun onSignInClicked(view: View) {
-        val email = binding.EmailText.text.toString()
+    fun onSignUpClicked(view : View) {
+
+        val userEmail = binding.EmailText.text.toString()
         val password = binding.PasswordText.text.toString()
-        // check if email and password is empty
-        if (email == "" || password == ("")) {
-            Toast.makeText(this, "Email and password cannot be empty", Toast.LENGTH_LONG).show()
-        } else {
-            // we should use async task here because it takes time to create user
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                // success
-                val intent = Intent(this, FeedActivity::class.java)
-                startActivity(intent)
-                finish()
-                Toast.makeText(this, "Welcome $email", Toast.LENGTH_LONG).show()
-            }.addOnFailureListener {
-                // failure
-                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
+
+        if (userEmail.isNotEmpty() && password.isNotEmpty()) {
+            auth.createUserWithEmailAndPassword(userEmail,password).addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+                    val intent = Intent(applicationContext, FeedActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+
+            }.addOnFailureListener { exception ->
+                Toast.makeText(applicationContext,exception.localizedMessage,Toast.LENGTH_SHORT).show()
+
             }
-
-        }
-    }
-
-    fun onSignUpClicked(view: View) {
-        val email = binding.EmailText.text.toString()
-        val password = binding.PasswordText.text.toString()
-        // check if email and password is empty
-        if (email == ("") || password == ("")) {
-            Toast.makeText(this, "Email and password cannot be empty", Toast.LENGTH_LONG).show()
-        } else {
-            // we should use async task here because it takes time to create user
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-                // success
-                val intent = Intent(this, FeedActivity::class.java)
-                startActivity(intent)
-                finish()
-            }.addOnFailureListener {
-                // failure
-                Toast.makeText(this, it.localizedMessage, Toast.LENGTH_LONG).show()
-            }
-
         }
     }
 }

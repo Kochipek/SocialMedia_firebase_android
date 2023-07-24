@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/newPost_menu"
+        android:title="New Post"
+        android:enabled="true"
+        />
+    <item android:id="@+id/logOut_menu"
+        android:title="Log out"
+        android:enabled="true"
+        />
+</menu>
